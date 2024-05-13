@@ -1,1 +1,1 @@
-# JackalAstar
+# Physical A*
