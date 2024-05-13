@@ -1,0 +1,17 @@
+<launch>
+
+    <include file="$(find physical_astar)/launch/zed_cam_15fps.launch" />
+
+    <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+        <remap from='image' to='/zed/zed_node/depth/depth_registered' />
+        <remap from='camera_info' to='/zed/zed_node/depth/camera_info' />        
+        
+        <param name="scan_height" value="15" />
+        <param name="output_frame_id" value="zed_left_camera_frame" />
+
+    </node>
+
+    <node pkg="physical_astar" type="laserscan_manipulate.py" name="laserscan_manipulate" />
+    <node pkg="physical_astar" type="laserscan_sample.py" name="laserscan_sample" />
+
+</launch>

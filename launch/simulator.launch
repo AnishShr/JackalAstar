@@ -1,0 +1,57 @@
+<launch>
+    
+    <arg name='goal_image' default='$(find physical_astar)/data/images/IMG_6359.jpg' />
+    <arg name='map_name' default='Delta' />
+    <arg name='record_video' default='' />    
+    <arg name='config_dir_path' default='$(find physical_astar)/config' />    
+    <arg name='global_model_path' default='$(find physical_astar)/data/onnx_models/distance_segment.onnx' />
+    <arg name='map_path' default='$(find physical_astar)/data/maps' />    
+
+    <arg name='initial_x' default='80' />
+    <arg name='initial_y' default='80' />
+
+    <!-- config for quantitative analysis -->
+
+    <!-- <arg name='initial_x' default='120' />
+    <arg name='initial_y' default='150' /> -->
+
+    <!-- <arg name='initial_x' default='140' />
+    <arg name='initial_y' default='-90' /> -->
+    
+    <!-- <arg name='initial_x' default='160' />
+    <arg name='initial_y' default='200' /> -->
+
+    <!-- <arg name='initial_x' default='100' />
+    <arg name='initial_y' default='310' /> -->
+
+    <!-- <arg name='initial_x' default='10' />
+    <arg name='initial_y' default='300' /> -->
+
+    <!-- Delta -->
+    <arg name='initial_lat' default='58.384168 ' />
+    <arg name='initial_lon' default='26.726312' />
+
+    <!-- Narva 27 -->
+    <!-- <arg name='initial_lat' default='58.383824 ' />
+    <arg name='initial_lon' default='26.727307' /> -->
+    
+    <arg name='timer_frequency' default='5' />
+    <arg name='node_name' default='simulator.py' />     
+
+    <node pkg="physical_astar" type="$(arg node_name)" name="inference" required="true" output="screen">
+        
+        <param name="config_dir_path" value="$(arg config_dir_path)" />
+        <param name="global_model_path" value="$(arg global_model_path)" />
+        <param name="map_path" value="$(arg map_path)" />
+        <param name="map_name" value="$(arg map_name)" />
+        <param name="initial_x" value="$(arg initial_x)" />
+        <param name="initial_y" value="$(arg initial_y)" />
+        <param name="initial_lat" value="$(arg initial_lat)" />
+        <param name="initial_lon" value="$(arg initial_lon)" />
+        <!-- <param name="orientation_fix" value="$(arg orientation_fix)" /> -->
+        <param name="record_video" value="$(arg record_video)" />  
+        <param name="timer_frequency" value="$(arg timer_frequency)" />
+        
+    </node>
+    
+</launch>
