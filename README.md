@@ -40,7 +40,7 @@ rosdep install --from-paths src --ignore-src -r -y
 
 ### Running the nodes
 
-One of the simulation environment in which the algorithm is tested in Gazebo which uses ['Jackal Simualtion'](https://docs.clearpathrobotics.com/docs/ros1noetic/robots/outdoor_robots/jackal/tutorials_jackal#simulating-jackal). In order to run these simulation nodes, please make sure you have all required packages. You can install these packages by going though the ['Jackal instaltion'](https://docs.clearpathrobotics.com/docs/ros1noetic/robots/outdoor_robots/jackal/tutorials_jackal#jackal-software-setup) guidelines
+One of the simulation environment in which the algorithm is tested in Gazebo which uses [`Jackal Simualtion`](https://docs.clearpathrobotics.com/docs/ros1noetic/robots/outdoor_robots/jackal/tutorials_jackal#simulating-jackal). In order to run these simulation nodes, please make sure you have all required packages. You can install these packages by going though the [`Jackal installation`](https://docs.clearpathrobotics.com/docs/ros1noetic/robots/outdoor_robots/jackal/tutorials_jackal#jackal-software-setup) guidelines
    
 Once the Jackal software setup has been complete, you can move forward with the Gazebo simulation with Jackal.   
    
