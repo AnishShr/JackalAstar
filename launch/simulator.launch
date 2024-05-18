@@ -5,35 +5,40 @@
     <arg name='record_video' default='' />    
     <arg name='config_dir_path' default='$(find physical_astar)/config' />    
     <arg name='global_model_path' default='$(find physical_astar)/data/onnx_models/distance_segment.onnx' />
-    <arg name='map_path' default='$(find physical_astar)/data/maps' />    
+    <arg name='map_path' default='$(find physical_astar)/data/maps' />
 
-    <arg name='initial_x' default='80' />
-    <arg name='initial_y' default='80' />
+    <!-- Test scenario -->
+    <!-- <arg name='x' default='80' />
+    <arg name='y' default='80' /> -->
 
-    <!-- config for quantitative analysis -->
+    <!-- config for quantitative analysis -->  
 
-    <!-- <arg name='initial_x' default='120' />
-    <arg name='initial_y' default='150' /> -->
+    <!-- scenario 1 -->
+    <arg name='x' value='120' />
+    <arg name='y' value='150' />
 
-    <!-- <arg name='initial_x' default='140' />
-    <arg name='initial_y' default='-90' /> -->
+    <!-- scenario 2 -->
+    <!-- <arg name='x' value='140' />
+    <arg name='y' value='-90' /> -->
     
-    <!-- <arg name='initial_x' default='160' />
-    <arg name='initial_y' default='200' /> -->
+    <!-- scenario 3 -->
+    <!-- <arg name='x' value='160' />
+    <arg name='y' value='200' /> -->
 
-    <!-- <arg name='initial_x' default='100' />
-    <arg name='initial_y' default='310' /> -->
+    <!-- scenario 4 -->
+    <!-- <arg name='x' value='100' />
+    <arg name='y' value='310' /> -->
 
-    <!-- <arg name='initial_x' default='10' />
-    <arg name='initial_y' default='300' /> -->
+    <!-- scenario 5 -->
+    <!-- <arg name='x' value='10' />
+    <arg name='y' value='300' /> -->
+
+    <arg name='initial_x' default="$(arg x)" />
+    <arg name='initial_y' default="$(arg y)" />
 
     <!-- Delta -->
     <arg name='initial_lat' default='58.384168 ' />
     <arg name='initial_lon' default='26.726312' />
-
-    <!-- Narva 27 -->
-    <!-- <arg name='initial_lat' default='58.383824 ' />
-    <arg name='initial_lon' default='26.727307' /> -->
     
     <arg name='timer_frequency' default='5' />
     <arg name='node_name' default='simulator.py' />     
