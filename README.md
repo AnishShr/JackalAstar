@@ -63,4 +63,58 @@ You should see the Jackal initially driving in a straight path as it is calibrat
 
 #### Gazebo simulation in various scenarios
 
+The launch file which launches the gazebo simulaiton environment and RViz visualization is inside the launh directory `.../robot_ws/src/physical_astar/launch/jackalsim.launch`.   
+In this launch file, the initial posiiton where the jackal will be spawned is configurable. Depending on various scenarios, these initial posiiton can be configured.   
+
+![jackal_sim](https://github.com/AnishShr/physical_astar/assets/62991158/16fe9864-029a-413c-b3fb-6dab8bb3b4d3)
+
+
+##### Easy Scenario
+
+To choose one of the easy scnearios, uncomment the block of code corresponding to that scenario (and comment others) and run the following commands (**from the local terminal- not conda environment**)   
+```
+roslaunch physical_astar jackal_sim.launch nav_type_easy:=true
+```
+
+##### Difficult Scenario
+To choose the scneario, run the following commands (**from the local terminal- not conda environment**)   
+```
+roslaunch physical_astar jackal_sim.launch
+```
+
+Once the gazebo and rviz window appear, run the following command from the **terminal where conda environment is activated**:
+```
+rosrun physical_astar jackal_sim_gps_cbf.py
+```
+
+##### Naive algorithm
+In order to run the naive algorithm, run the following in place of the physical a* node:
+```
+rosrun physical_astar jackal_sim_no_graph.py
+```
+
+For either case, i.e., naive or physical a* algorithm, the terminal window in which the node is running, the number of robot time steps is always logged as the robot published velocity after initial GPS heading calibration.
+
+
+##### Odometry based physcial A*
+To run the physical A* with odometry coordinates, rather than GPS coordinates, run the following command:   
+```
+rosrun physical_astar jackal_sim_odom_cbf.py
+```
+
+*Regardless of which approach is run, please make sure that the terminal window with local environment (non-conda environment) should launch gazebo and rviz.*
+
+
 #### Raster map simulation in various scenarios
+
+The launch file for lauching different scenarios for raster map simulation is inside the launch directory `.../robot_Ws/src/physical_astar/launch/simulator.launch`.   
+
+The initial UTM offsets for each scenario is set. Please uncomment the block of code for the corresponding scenario (and comment others) to run the raster map simulation for that scenario.   
+
+![raster_sim](https://github.com/AnishShr/physical_astar/assets/62991158/546ff578-b1cb-4777-8018-b84955835ab6)
+   
+
+To run the raster map simualtion, from the terminal window with conda environment activated, please run the following command:   
+```
+roslaunch physical_astar simualator.launch
+```
