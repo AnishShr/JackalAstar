@@ -26,7 +26,7 @@ To create this conda environment, please go through the following steps:
 conda install mamba -c conda-forge
 conda create -n physical-astar python=3.9.16
 conda activate physical-astar
-mamba install pytorch-lightning tensorboard pandas jupyter matplotlib pytransform3d transformations h5py utm onnx opencv moviepy -c conda-forge
+mamba install pytransform3d transformations h5py utm onnx opencv moviepy -c conda-forge
 mamba install pyyaml rasterio pyproj
 pip install onnxruntime-gpu==1.16.0
 pip install cvxpy
