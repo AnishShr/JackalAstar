@@ -9,9 +9,15 @@ To build the ros workspace and getting started, the first thing would be to crea
 
 ```
 mkdir -p robot_ws/src
+cd robot_ws/src
 git clone https://github.com/AnishShr/physical_astar.git
 catkin build
 ```
+
+### Getting necessary files
+In order to run one of the simulations (raster map simulation), it needs the model file which is not included in the repo beacuse of it's large size. This model can be downloaded from: [`model`](https://www.dropbox.com/scl/fi/0l1j6y96w8elcey2vfb30/distance_segment.onnx?rlkey=7sdzxfwtgd51h889a7voumsbe&st=fpz9h1py&dl=0)   
+
+Once downloaded, copy the file to: `robot_ws/src/physical_astar/data/onnx_models`. You might need to create the `onnx_models` directory inside the `data` folder.
 
 ### Environment
 As the algorithm implementation uses some very specific packages, it is recommended to create a dedicated conda environment.   
