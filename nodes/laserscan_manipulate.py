@@ -54,37 +54,7 @@ class LaserRefiner:
         refined_scan_msg.range_max = msg.range_max
         refined_scan_msg.ranges = ranges
 
-        # for i in range(len(filtered_scan_msg.ranges)):
-        #     if filtered_scan_msg.ranges[i] < 2.0:
-        #         filtered_scan_msg.ranges[i] = 0.5
-
         self.scan_pub.publish(refined_scan_msg)
-
-        # filtered_ranges = []
-        # current_angle = refined_scan_msg.angle_min
-        # angle_increment = np.deg2rad(10)
-
-        # while current_angle <= refined_scan_msg.angle_max:
-        #     index = int((current_angle - refined_scan_msg.angle_min)/refined_scan_msg.angle_increment)
-        #     range_scan = refined_scan_msg.ranges[index]
-
-        #     filtered_ranges.append(range_scan)
-        #     current_angle += angle_increment
-        
-        # filtered_scan_msg = LaserScan()
-        # filtered_scan_msg.header = refined_scan_msg.header        
-        # filtered_scan_msg.angle_min = refined_scan_msg.angle_min
-        # filtered_scan_msg.angle_max = refined_scan_msg.angle_max
-        # filtered_scan_msg.angle_increment = angle_increment
-        # filtered_scan_msg.time_increment = refined_scan_msg.time_increment
-        # filtered_scan_msg.scan_time = refined_scan_msg.scan_time
-        # filtered_scan_msg.range_min = refined_scan_msg.range_min
-        # filtered_scan_msg.range_max = refined_scan_msg.range_max
-        # filtered_scan_msg.ranges = filtered_ranges
-
-        # self.scan_filtered_pub.publish(filtered_scan_msg)
-
-    
 
     def run(self):
         rospy.spin()

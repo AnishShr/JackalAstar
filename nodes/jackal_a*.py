@@ -61,8 +61,7 @@ class SigmaWaypoints:
         
         self.wp_node_id = wp_node_id                        # waypoint's parent node id in graph
         self.wp_gps = wp_gps                                # waypoint's gps position (lat, lon)
-        self.wp_prob = wp_prob                              # waypoint's probability as predicted by global planner
-        
+        self.wp_prob = wp_prob                              # waypoint's probability as predicted by global planner        
         
 
 class JackalAstar:
@@ -88,8 +87,7 @@ class JackalAstar:
         rospy.loginfo(f"Loaded global planner map: {map_file_path}")
         rospy.loginfo(f"Map resolution: {self.map_reader.map_resolution}")
 
-        # Load global planner configration
-        # global_planner_config_file = os.path.join(self.config_dir_path, 'distance_segment.yaml')
+        # Load global planner configration        
         global_planner_config_file = os.path.join(self.config_dir_path, 'default_segment.yaml')
         with open(global_planner_config_file, "r") as f:
             self.global_planner_config = yaml.safe_load(f)
@@ -100,7 +98,7 @@ class JackalAstar:
         rospy.loginfo(f"Loaded global planner model: {self.global_model_path}") 
 
         self.current_heading = None
-        self.heading_calibrated = None
+        # self.heading_calibrated = None
 
         self.prev_pose = None
         self.current_pose = None
@@ -145,6 +143,7 @@ class JackalAstar:
 
         self.graph = nx.Graph()
         self.sigma = PriorityQueue()
+        self.counter = 0
         
         self.candidate_waypoints_gps = None
         self.gps_trajectory = []
@@ -162,7 +161,7 @@ class JackalAstar:
         
 
         self.cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)        
-        self.marker_pub = rospy.Publisher('/visualization_marker', MarkerArray, queue_size=1, latch=True)
+        # self.marker_pub = rospy.Publisher('/visualization_marker', MarkerArray, queue_size=1, latch=True)
 
         rospy.Subscriber('/imu/data', Imu, self.imu_callback, queue_size=1)
         rospy.Subscriber('/odometry/filtered', Odometry, self.odom_callback, queue_size=1)
@@ -170,11 +169,6 @@ class JackalAstar:
         rospy.Subscriber('/scan/filtered', LaserScan, self.laser_callback, queue_size=1)        
         
         rospy.Timer(rospy.Duration(1.0/self.timer_frequency), self.timer_callback)
-
-        # Initialize ROS publishers and subscribers
-        self.driving_command_publisher = rospy.Publisher('cmd_vel',
-                                                          Twist,
-                                                          queue_size=1)
 
 
     def create_tf_matrix(self, source_frame, target_frame):
@@ -269,7 +263,8 @@ class JackalAstar:
             rospy.loginfo_once("Initial robot heading w.r.t. Geographic North calibrated")
             rospy.loginfo_once(f"Initial heading: {bearing_north} degrees (Clockwise) w.r.t. North")
             self.current_heading = bearing_north
-            self.heading_calibrated = True
+            # self.heading_calibrated = True
+
             
             self.node_id = 0
             self.graph.add_node(self.node_id,
@@ -299,11 +294,6 @@ class JackalAstar:
 
         current_north_heading = self.current_heading
         waypoint_angles_north = current_north_heading - realtive_angles
-
-        # if waypoint_angles_north > 180:
-        #     waypoint_angles_north -= 360
-        # elif waypoint_angles_north < 180:
-        #     waypoint_angles_north += 360
 
         waypoint_angles_north[waypoint_angles_north < -180] += 360
         waypoint_angles_north[waypoint_angles_north > 180] -= 360
@@ -375,35 +365,37 @@ class JackalAstar:
         return total_cost
     
 
-    def update_priority_queue(self, parent_node, new_wp):
+    def update_priority_queue(self, new_wp):
         updated_queue = PriorityQueue()
         
         # Update the pre-existing sigma        
         while not self.sigma.empty():
-            _, existing_node = self.sigma.get()            
+            _,_, existing_node = self.sigma.get()            
             wp_px = self.map_reader.to_px(existing_node.wp_gps)                      
-            wp_px = np.array(wp_px).reshape(-1, 2)
+            wp_px = np.array(wp_px).reshape(-1, 2)            
+
             wp_prob = self.global_planner.calculate_probs(wp_px,
-                                                          self.current_px_position,
-                                                          self.current_heading)
+                                                          self.current_position,
+                                                          self.north_heading)
             wp_prob = np.squeeze(wp_prob)            
             existing_node.wp_prob = wp_prob
-            final_cost = self.compute_cost(parent_node, existing_node)   
-            print(type(final_cost))         
-            updated_queue.put((final_cost, existing_node))
+            final_cost = self.compute_cost(existing_node)
+            self.counter += 1     
+            updated_queue.put((final_cost, self.counter, existing_node))
 
-        # # Add new wp in sigma after computing the new cost
-        # final_cost = self.compute_cost(new_wp)
-        # updated_queue.put((final_cost, new_wp))
+        # Add new wp in sigma after computing the new cost        
         new_wp_px = self.map_reader.to_px(new_wp.wp_gps)
         new_wp_px = np.array(new_wp_px).reshape(-1, 2)
+
         new_wp_prob = self.global_planner.calculate_probs(new_wp_px,
-                                                          self.current_px_position,
-                                                          self.current_heading)
+                                                          self.current_position,
+                                                          self.north_heading)
         new_wp_prob = np.squeeze(new_wp_prob)
+        
         new_wp.wp_prob = new_wp_prob
-        final_cost = self.compute_cost(new_wp)        
-        updated_queue.put((final_cost, new_wp))
+        final_cost = self.compute_cost(new_wp)
+        self.counter += 1        
+        updated_queue.put((final_cost, self.counter, new_wp))
 
         return updated_queue
 
@@ -413,8 +405,8 @@ class JackalAstar:
         angles = np.array([msg.angle_min + i * msg.angle_increment \
                            for i in range(len(msg.ranges))])
 
-        valid_indices = ranges >= 3.5
-        invalid_indices = ranges < 3.5
+        valid_indices = ranges >= 5.0
+        invalid_indices = ranges < 5.0
 
         valid_ranges = ranges[valid_indices]
         valid_angles = angles[valid_indices]
@@ -446,8 +438,8 @@ class JackalAstar:
 
             if len(points_inside_buffer) == 0:
                 # Waypoint 1m in that direction
-                wp_x = 2.0 * np.cos(valid_angle)
-                wp_y = 2.0 * np.sin(valid_angle)
+                wp_x = 4.0 * np.cos(valid_angle)
+                wp_y = 4.0 * np.sin(valid_angle)
                 collision_free_waypoints.append([wp_x, wp_y])
         
         collision_free_waypoints = np.array(collision_free_waypoints)
@@ -521,8 +513,7 @@ class JackalAstar:
 
         self.show_img(result_img)
         key = cv2.waitKey(int(1/self.timer_frequency*1000))            
-        if key == 27:                       
-
+        if key == 27:
             cv2.destroyAllWindows()
             rospy.signal_shutdown("User pressed ESC")
         
@@ -541,9 +532,6 @@ class JackalAstar:
 
             self.gps_path = []
             self.path_through_graph = None 
-
-            # current_target = ros_point()
-            # self.current_target_pub.publish(current_target)
 
             self.state = 3
 
@@ -698,8 +686,8 @@ class JackalAstar:
         self.current_gps = np.array([msg.vector.x, msg.vector.y])
         self.current_px_position = self.map_reader.to_px(self.current_gps)
 
-        if self.heading_calibrated:
-            self.gps_trajectory.append(self.current_gps)
+        # if self.heading_calibrated:
+        #     self.gps_trajectory.append(self.current_gps)
 
     
     def timer_callback(self, event=None):
@@ -753,7 +741,7 @@ class JackalAstar:
                     nodes_to_merge_with = []
                     for node in self.graph_nodes():
                         if self.distance_from_gps(gps_origin=waypoints_gps[i],
-                                                  gps_destination=self.graph.nodes[node]['node_gps']) < 1.0:
+                                                  gps_destination=self.graph.nodes[node]['node_gps']) < 3.0:
                             nodes_to_merge_with.append(node)
                     
                     if len(nodes_to_merge_with) == 0:
@@ -790,7 +778,7 @@ class JackalAstar:
                         if node != another_node:
                             dist = self.distance_from_gps(gps_origin=self.graph.nodes[node]['node_gps'],
                                                           gps_destination=self.graph.nodes[another_node]['node_gps'])
-                            if 1.0 < dist < 1.5:
+                            if dist < 2.0:
                                 if self.graph.has_edge(node, another_node):
                                     self.graph.edges[node, another_node]['distance'] = dist
                                 else:
@@ -802,7 +790,7 @@ class JackalAstar:
 
                 # print(f"Graph nodes: \n{self.graph.nodes.data()}")
 
-                _, lowest_cost_wp = self.sigma.get()
+                _,_, lowest_cost_wp = self.sigma.get()
                 print(lowest_cost_wp.wp_node_id)
 
                 path_to_lowest_cost_wp = nx.shortest_path(G=self.graph,

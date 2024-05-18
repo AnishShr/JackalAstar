@@ -190,6 +190,11 @@ class Visualizer:
 
         candidate waypoints: pixel coordinates of the relative candidate waypoints
         """
+        # start_row = (400 - 200) // 2
+        # end_row = start_row + 200
+        # start_col = (400 - 200) // 2
+        # end_col = start_col + 200
+        
         global_planner_viz = GlobalPlannerViz(self.global_planner, adjust_heading=False)        
         # trajectories_map_img = global_planner_viz.plot_trajectories_map(self.current_position,
         #                                                                 self.goal_position,
@@ -200,10 +205,18 @@ class Visualizer:
                                                                         self.goal_position,
                                                                         self.north_heading)
         probability_map_img = global_planner_viz.plot_probability_map(self.current_position, self.goal_position)
-        result_img = np.concatenate((trajectories_map_img, probability_map_img), axis=1) 
+
+        # print(f"trajectory map size: {trajectories_map_img.shape}")
+        # print(f"probability map size: {probability_map_img.shape}")
+
+        # trajectories_map_img_cropped = trajectories_map_img[start_row:end_row, start_col:end_col, :]
+        # probability_map_img_cropped = probability_map_img[start_row:end_row, start_col:end_col, :]
+
+        result_img = np.concatenate((trajectories_map_img, probability_map_img), axis=1)
+        # result_img = np.concatenate((trajectories_map_img_cropped, probability_map_img_cropped), axis=1) 
         # result_img --> cropped map
         # result_img = cv2.cvtColor(trajectories_map_img, cv2.COLOR_BGR2RGB)    
-        result_img = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)    
+        result_img = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)  
 
         return result_img
     
@@ -211,6 +224,7 @@ class Visualizer:
 
         selected_node_px_coords = self.map_reader.to_px(gps)
         selected_node_crop_coords = self.map_reader.to_crop_coordinates(self.current_position, selected_node_px_coords)
+
         cv2.circle(result_img, selected_node_crop_coords, radius_selected_point, color_selected_point, 2)
 
         self.show_img(result_img)

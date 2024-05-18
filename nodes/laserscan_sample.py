@@ -32,6 +32,7 @@ class LaserDownsampler:
         current_angle = msg.angle_min
         angle_increment = np.deg2rad(10)
 
+        # Take scans every 10 degrees
         while current_angle <= msg.angle_max:
             index = int((current_angle - msg.angle_min)/msg.angle_increment)
             range_scan = msg.ranges[index]
