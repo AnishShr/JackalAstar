@@ -51,7 +51,10 @@ roslaunch physical_astar jackal_sim.launch
 
 This should launch a gazebo world with Jackal launched in it, and a RViz window of the same simulation environment.
 
-[Images of Gazebo world and RViz]
+![jackal_sim_gazebo](https://github.com/AnishShr/physical_astar/assets/62991158/9aeb5637-0168-458c-b510-a31acece7f1d)
+
+![jackal_sim_rviz](https://github.com/AnishShr/physical_astar/assets/62991158/baab8223-77b8-44db-aa40-f1434347389f)
+
 
 In another terminal (**where you have activated the conda environment**), run the following command:
 ```
@@ -60,6 +63,7 @@ rosrun physical_astar jackal_sim_gps_cbf.py
 
 You should see the Jackal initially driving in a straight path as it is calibrating it's initial GPS heading, and then start to create a graph and implement the physcial A* algorithm.
 
+If you are able to run this, then you are all set up. This is just a *getting started* instruction. Follow along to run the simulation nodes for both: gazebo simulation and raster map simualiton in various scenarios.    
 
 #### Gazebo simulation in various scenarios
 
