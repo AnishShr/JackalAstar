@@ -128,3 +128,19 @@ To run the raster map simualtion, from the terminal window with conda environmen
 ```
 roslaunch physical_astar simualator.launch
 ```
+
+You can also record the simulation video with `record_video` argument.
+```
+roslaunch physical_astar simualator.launch record_video:=<path_to_the_video_file_where_you_want_to_save.mp4>
+```
+
+This by default runs the physical A* with raster map simulation. In order to run the raster map simulation with naive approach, you can run the following:   
+```
+roslaunch physical_astar simualator.launch node_name:=simulator_naive.py
+```
+
+Or, if you want to record the video of the naive approach then run the following:
+```
+roslaunch physical_astar simualator.launch node_name:=simulator_naive.py record_video:=<path_to_the_video_file_where_you_want_to_save.mp4>
+```
+
