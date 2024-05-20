@@ -124,7 +124,7 @@ The initial UTM offsets for each scenario is set. Please uncomment the block of 
 ![raster_sim](https://github.com/AnishShr/physical_astar/assets/62991158/546ff578-b1cb-4777-8018-b84955835ab6)
    
 
-To run the raster map simualtion, from the terminal window with conda environment activated, please run the following command:   
+To run the raster map simualtion, from the **terminal window with conda environment activated**, please run the following command:   
 ```
 roslaunch physical_astar simualator.launch
 ```
@@ -144,3 +144,4 @@ Or, if you want to record the video of the naive approach then run the following
 roslaunch physical_astar simualator.launch node_name:=simulator_naive.py record_video:=<path_to_the_video_file_where_you_want_to_save.mp4>
 ```
 
+**P.S. the number of robot timesteps that the robot has taken will be logged in the terminal window where you launch the simualtion**
