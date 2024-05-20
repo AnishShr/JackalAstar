@@ -117,17 +117,21 @@ rosrun physical_astar jackal_sim_odom_cbf.py
 
 #### Raster map simulation in various scenarios
 
-The launch file for lauching different scenarios for raster map simulation is inside the launch directory `.../robot_Ws/src/physical_astar/launch/simulator.launch`.   
+The launch file for lauching different scenarios for raster map simulation is inside the launch directory `.../robot_ws/src/physical_astar/launch/simulator.launch`.   
 
 The initial UTM offsets for each scenario is set. Please uncomment the block of code for the corresponding scenario (and comment others) to run the raster map simulation for that scenario.   
 
 ![raster_sim](https://github.com/AnishShr/physical_astar/assets/62991158/546ff578-b1cb-4777-8018-b84955835ab6)
    
 
-To run the raster map simualtion, from the **terminal window with conda environment activated**, please run the following command:   
+To run the raster map simulation, from the **terminal window with conda environment activated**, please run the following command:   
 ```
 roslaunch physical_astar simualator.launch
 ```
+You should see something like the following when you launch the simulation:   
+![raster_sim_repo](https://github.com/AnishShr/physical_astar/assets/62991158/fee5a97d-d363-47d3-a248-8722ed099741)
+
+
 
 You can also record the simulation video with `record_video` argument.
 ```
